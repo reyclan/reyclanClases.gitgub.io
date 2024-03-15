@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Título de la página -->
+    <title>VISOR MAPA BOLIVIA/REYCLAN</title>
+    <!-- Metadatos -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Estilos -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            font-family: Verdana;
+            color: #aaaaaa;
+        }
+        html, body, #map {
+            height: 96%;
+            width: 100%;
+        }
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            color: #C0381B;
+            text-align: center;
+            overflow: visible;
+            background-color: #FFF;
+            color: #000;
+            padding: 10px; /* Agregado: espacio interior */
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #C00;
+        }
+        @media (max-width: 700px) {
+            .container {
+                width: 100%;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Contenedor del mapa -->
+    <div id='map'></div>
+    <!-- Contenedor para mensajes o demostraciones -->
+    <p id="demo"></p>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMT..." crossorigin=""></script>
+    <script src="location.js" type="text/javascript"></script>
+    <script src="grantescual.js" type="text/javascript"></script>
+    <script src="BOL_adm0.js" type="text/javascript"></script> <!-- Agregar el script de la capa BOL_adm0 -->
+    
+    <!-- Script principal -->
+    <script>
+        // Crear el mapa con Leaflet
+        var map = L.map('map').setView([0.7682128, -77.30], 10);
+
+        // Capa base: ArcGIS World Imagery
+        var arcgisWorldImageryLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Map data &copy; Esri'
+        }).addTo(map);    
+
+        // Capa base: Google Satellite
+	    var googleSatelliteLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            attribution: 'Map data &copy; Google'
+        });
+
+        // Capa de gran tescual
+        var granTescualLayer = L.geoJson(grantescual, {
+            style: {
+                weight: 4,
+                color: '#ffff00',
+                opacity: 1,
+                fillOpacity: 0,
+                dashArray: '5, 5, 1, 5'
+            }
+        }).addTo(map);
+
+        // Capa de BOL_adm0
+        var boliviaLayer = L.geoJson(BOL_adm0, {
+            style: {
+                weight: 2,
+                color: '#ff0000',
+                opacity: 1,
+                fillOpacity: 0.2,
+                fillColor: '#ff0000'
+            }
+        }).addTo(map);
+
+        // Capas base disponibles
+        var baseMaps = {
+			"ArcGIS World Imagery": arcgisWorldImageryLayer,
+            "Google Satellite": googleSatelliteLayer
+        };
+
+        // Capas de superposición disponibles
+        var overlayMaps = {
+            "Gran Tescual": granTescualLayer,
+            "Bolivia": boliviaLayer // Agregar la capa de Bolivia al control de capas
+        };
+
+        // Control de capas
+        L.control.layers(baseMaps, overlayMaps).addTo(map);
+    </script>
+
+    <!-- Pie de página -->
+    <div class="footer">
+        <!-- Texto del pie de página -->
+        © copyright: @AntonioPantojaC <br>
+        <a href="https://twitter.com/AntonioPantojaC" target="_blank" rel="noreferrer noopener">Twitter |</a>
+        <a href="https://www.linkedin.com/in/antoniopantojac/" target="_blank" rel="noreferrer noopener">LinkedIn</a><br>
+        <a href="https://americalatina.unigis.net/" target="_blank" rel="noreferrer noopener">UNIGIS América Latina |</a>
+    </div>
+</body>
+</html>
+
